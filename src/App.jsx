@@ -1,8 +1,10 @@
 // src/App.jsx
-
-import { useState } from 'react';
+import PokemonDetails from './components/PokemonDetails/PokemonDetails';
 import PokemonList from './components/PokemonList/PokemonList';
+import PokemonForm from './components/PokemonForm/PokemonForm';
 import NavBar from './components/NavBar/NavBar';
+import { useState } from 'react';
+import { Route, Routes } from 'react-router';
 
 
 const initialState = [
@@ -13,13 +15,34 @@ const initialState = [
   { _id: 5, name: 'charmeleon', weight: 190, height: 11 },
 ];
 
+
 const App = () => {
   const [pokemon, setPokemon] = useState(initialState);
+  const addPokemon = (newPokemonData) => {
+    newPokemonData._id = pokemon.length + 1;
+    setPokemon([...pokemon, newPokemonData]);
+  };
+  
   return (
     <>
-      <NavBar />
       <h1>Pokemon!</h1>
-      <PokemonList pokemon={pokemon} />
+      <NavBar />
+      <Routes>
+        <Route
+          path='/'
+          element={<h2>Home Page</h2>} />
+        <Route
+          path='/pokemon'
+          element={<PokemonList pokemon={pokemon} />} />
+        <Route
+          path='/pokemon/new'
+          element={<PokemonForm addPokemon={addPokemon} />} />
+        <Route
+          path="/pokemon/:pokemonId"
+          element={<PokemonDetails pokemon={pokemon} />}
+        />
+        <Route path="*" element={<h2>Whoops, nothing here!</h2>} />
+      </Routes>
     </>
   );
 };
